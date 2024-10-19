@@ -3,7 +3,7 @@ on: [push]
 jobs:
   run:
     runs-on: [ubuntu-latest]
-    container: docker://mtdd1/tyminterview:tagname
+    container: docker://mtdd1/tyminterview:latest
     steps:
       - uses: actions/checkout@v2
       - name: sanity-check
