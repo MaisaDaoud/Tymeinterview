@@ -12,5 +12,5 @@ jobs:
         run: |
 
           # Your ML workflow goes here
-          pip install -r requirements.txt
-          python test.py
+          pip install -r app/requirements.txt
+          python app/test.py
