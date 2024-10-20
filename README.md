@@ -11,7 +11,7 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 
 # To build container image 
-docker build --platform linux/amd64 -t boston-predict 
+docker build --platform linux/amd64 -t boston-predict .
 docker run -p 8000:8000 boston-predict
 docker tag boston-predict:latest  mtdd1/tyminterview:latest
 docker login

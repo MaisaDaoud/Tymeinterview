@@ -26,8 +26,11 @@ raw_df[10].fillna(raw_df[10].mean(),inplace=True)
 
 X, y = raw_df.iloc[:,0:10],  raw_df.iloc[:,10] #load_breast_cancer(return_X_y=True)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y,  random_state=34) #,stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X, y,  random_state=39) #,stratify=y)
 
+# save the  test files
+pd.DataFrame(X_test) .to_csv("x_test.csv",index=False)
+pd.DataFrame(y_test) .to_csv("y_test.csv", index=False)
 
 xgb_reg = xgb.XGBRegressor(objective="reg:squarederror", # reg:linear
                           learning_rate=0.1,
@@ -40,9 +43,9 @@ xgb_reg = xgb.XGBRegressor(objective="reg:squarederror", # reg:linear
 xgb_reg.fit(X_train, y_train)
 # xgb_reg.save_model("model/clf.json")
 # save
-with open('model/model.pkl','wb') as f:
+with open('app/model/model.pkl','wb') as f:
     pickle.dump(xgb_reg,f)
 y_pred = xgb_reg.predict(X_test)
-print(y_pred)
+# print(y_pred)
 #TODO use evaluation metrics for validation
 

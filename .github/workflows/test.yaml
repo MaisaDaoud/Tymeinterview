@@ -1,3 +1,20 @@
+# name: auto-testing
+# on: [push]
+# jobs:
+#   run:
+#     runs-on: [ubuntu-latest]
+#     container: docker://mtdd1/tyminterview:latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: sanity-check
+#         env:
+#           repo_token: ${{ secrets.GITHUB_TOKEN }}
+#         run: |
+
+#           # Your ML workflow goes here
+#           pip install -r app/requirements.txt
+#           python app/test.py
+
 name: auto-testing
 on: [push]
 jobs:
@@ -6,11 +23,23 @@ jobs:
     container: docker://mtdd1/tyminterview:latest
     steps:
       - uses: actions/checkout@v2
-      - name: sanity-check
+      - name: cml_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
 
-          # Your ML workflow goes here
+          # Run the test
           pip install -r app/requirements.txt
-          python app/test.py
+          python app/git_test.py
+          
+          # Report the diff
+          echo "## Workspace vs. Main" > report.md
+          git fetch --prune
+          dvc metrics diff main --targets app/test_score.json --show-md >> report.md
+          
+          # Print out the failure modes
+          echo "## Failure modes" >> report.md
+          cat failure_modes.txt >> report.md
+          
+          # Send it!
+          cml-send-comment report.md
