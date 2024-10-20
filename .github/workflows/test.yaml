@@ -32,7 +32,7 @@ jobs:
           pip install -r app/requirements.txt
           python app/git_test.py
           
-          # Report the diff
+         
           echo "## Workspace vs. Main" > report.md
           git fetch --prune
           dvc metrics diff main --targets app/test_score.json --show-md >> report.md
