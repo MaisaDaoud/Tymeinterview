@@ -17,12 +17,14 @@
 
 name: auto-testing
 on: [push]
+permissions:
+  contents: write
 jobs:
   run:
     runs-on: [ubuntu-latest]
     container: docker://mtdd1/tyminterview:latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: cml_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
