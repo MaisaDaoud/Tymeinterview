@@ -36,7 +36,7 @@ jobs:
           
          
           echo "## Workspace vs. Main" > report.md
-          git fetch --prune
+          # git fetch --prune
           dvc metrics diff main --targets app/test_score.json --show-md >> report.md
           
           # Print out the failure modes
