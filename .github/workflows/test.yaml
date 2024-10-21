@@ -21,9 +21,12 @@ permissions:
   contents: write
 jobs:
   run:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     container: docker://mtdd1/tyminterview:latest
     steps:
+      - name: Check Git version
+        run: git --version
+
       - uses: actions/checkout@v2
       - name: cml_run
         env:
