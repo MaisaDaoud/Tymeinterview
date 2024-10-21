@@ -22,7 +22,7 @@ jobs:
     runs-on: [ubuntu-latest]
     container: docker://mtdd1/tyminterview:latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
       - name: cml_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
