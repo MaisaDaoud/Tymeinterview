@@ -22,7 +22,17 @@ jobs:
     runs-on: [ubuntu-latest]
     #container: docker://mtdd1/tyminterview:latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install CML
+        uses: iterative/setup-cml@v1
+        
+      - name: Install DVC
+        uses: iterative/setup-dvc@v1
+        with:
+          version: '1.0.1'
+
       - name: cml_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -43,3 +53,5 @@ jobs:
           
           # Send it!
           cml-send-comment report.md
+
+          
