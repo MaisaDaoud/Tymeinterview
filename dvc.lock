@@ -1,4 +1,0 @@
-schema: '2.0'
-stages:
-  train:
-    cmd: python train.py
