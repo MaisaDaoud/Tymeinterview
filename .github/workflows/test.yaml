@@ -15,36 +15,51 @@
 #           pip install -r app/requirements.txt
 #           python app/test.py
 
-name: auto-testing
-on: [push]
-permissions:
-  contents: write
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    container: docker://mtdd1/tyminterview:latest
-    steps:
-      - name: Check Git version
-        run: git --version
-        
-      - uses: actions/checkout@v2
-      - name: cml_run
-        env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-        run: |
 
-          # Run the test
+﻿name: ci-pipeline
+
+on: [push]
+
+jobs:
+  CI-Pipeline:
+    runs-on: [ubuntu-latest]
+    env:
+      repo_token: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        
+      - name: Install CML
+        uses: iterative/setup-cml@v1
+        
+      - name: Install DVC
+        uses: iterative/setup-dvc@v1
+        
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          
+        
+      - name: Install all dependencies
+        run: |
           pip install -r app/requirements.txt
-          python app/git_test.py
           
-         
-          echo "## Workspace vs. Main" > report.md
+      # - name: Load Data
+      #   run: |
+      #     dvc repro dvc.yaml:load_data
+          
+      # - name: Split Data
+      #   run: |
+      #     dvc repro dvc.yaml:split_data
+          
+      - name: Train and Evaluate
+        run: |
+          dvc repro dvc.yaml:train_and_evaluate
+          
+      - name: Generate Report
+        run: |          
           git fetch --prune
-          dvc metrics diff main --targets app/test_score.json --show-md >> report.md
+          dvc metrics diff --show-md main > report.md
+          cml comment create report.md
           
-          # Print out the failure modes
-          # echo "## Failure modes" >> report.md
-          # cat failure_modes.txt >> report.md
-          
-          # Send it!
-          cml-send-comment report.md
