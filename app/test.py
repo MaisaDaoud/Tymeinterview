@@ -12,7 +12,6 @@ def get_predictions(data):
     #         model= None
     #         return 'No model found'
     # try:
-    print('data ', data[:2])
     prediction = model.predict(data)
     # except:
     #         prediction = None

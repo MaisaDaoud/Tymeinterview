@@ -28,12 +28,12 @@ jobs:
 
           # Run the test
           pip install -r app/requirements.txt
-          python app/git_test.py
+          python git_test.py
           
          
           echo "## Workspace vs. Main" > report.md
           git fetch --prune
-          dvc metrics diff main --targets app/test_score.json --show-md >> report.md
+          dvc metrics diff main --targets test_score.json --show-md >> report.md
           
           # Send it!
           cml comment create report.md
