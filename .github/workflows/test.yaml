@@ -32,9 +32,9 @@ jobs:
       - name: Install CML
         uses: iterative/setup-cml@v1
         
-      - name: Install DVC
-        uses: iterative/setup-dvc@v2
-        
+      # - name: Install DVC
+      #   uses: iterative/setup-dvc@v1
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -44,6 +44,7 @@ jobs:
       - name: Install all dependencies
         run: |
           pip install -r app/requirements.txt
+          python app/git_test.py
           
       # - name: Load Data
       #   run: |
@@ -53,9 +54,9 @@ jobs:
       #   run: |
       #     dvc repro dvc.yaml:split_data
           
-      - name: Train and Evaluate
-        run: |
-          dvc repro dvc.yaml:train_and_evaluate
+      # - name: Train and Evaluate
+      #   run: |
+      #     dvc repro dvc.yaml:train_and_evaluate
           
       - name: Generate Report
         run: |          
