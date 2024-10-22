@@ -16,9 +16,8 @@ stages:
     #     outs:
     #     - data/processed/train_winequality.csv
     #     - data/processed/test_winequality.csv
-        
-    train_and_evaluate:
-        cmd: python train.py
+    
+    evaluate:
         cmd: python app/git_test.py
         # deps:
         # - data/processed/train_winequality.csv
@@ -29,7 +28,7 @@ stages:
         # - estimators.ElasticNet.params.l1_ratio
         metrics:
         - app/test_score.json:
-            cache: false
+            cache: True
         # - reports/params.json:
         #     cache: false
         outs:

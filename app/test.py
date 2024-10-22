@@ -4,8 +4,8 @@ import os
 
 def get_predictions(data):
     # try:
-    print(os.getcwd() )
-    with open('app/model/model.pkl', 'rb') as f:
+    print('********** ', os.getcwd() )
+    with open(os.getcwd()+'/app/model/model.pkl', 'rb') as f:
         model = pickle.load(f)
         data = np.array(data)
     # except FileNotFoundError:
