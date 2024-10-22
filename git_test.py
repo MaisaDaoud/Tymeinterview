@@ -1,7 +1,7 @@
 
 
 import pandas as pd
-from test import get_predictions
+from app.test import get_predictions
 from sklearn.metrics import mean_squared_error
 import json 
 
