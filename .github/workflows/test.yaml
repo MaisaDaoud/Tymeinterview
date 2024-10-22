@@ -32,8 +32,10 @@ jobs:
       - name: Install CML
         uses: iterative/setup-cml@v1
         
-      # - name: Install DVC
-      #   uses: iterative/setup-dvc@v1
+      - name: Install DVC
+        uses: iterative/setup-dvc@v1
+        with:
+          version: '1.0.1'
 
       - name: Setup python
         uses: actions/setup-python@v4
