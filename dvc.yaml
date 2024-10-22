@@ -1,0 +1,35 @@
+stages:
+    # load_data:
+    #     cmd: python src/get_data.py --config=params.yaml
+    #     deps:
+    #     - src/get_data.py
+    #     - data_given/winequality.csv
+    #     outs:
+    #     - data/raw/winequality.csv
+        
+    # split_data:
+    #     cmd: python src/split_data.py --config=params.yaml
+    #     deps:
+    #     - src/get_data.py
+    #     - src/split_data.py
+    #     - data/raw/winequality.csv
+    #     outs:
+    #     - data/processed/train_winequality.csv
+    #     - data/processed/test_winequality.csv
+    
+    evaluate:
+        cmd: python app/git_test.py
+        # deps:
+        # - data/processed/train_winequality.csv
+        # - data/processed/test_winequality.csv 
+        # - src/train_evaluate.py
+        # params:
+        # - estimators.ElasticNet.params.alpha
+        # - estimators.ElasticNet.params.l1_ratio
+        metrics:
+        - app/test_score.json:
+            cache: True
+        # - reports/params.json:
+        #     cache: false
+        outs:
+        -  app/model/model.pkl #saved_models/model.joblib
