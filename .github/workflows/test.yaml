@@ -16,7 +16,7 @@
 #           python app/test.py
 
 
-﻿name: ci-pipeline
+name: ci-pipeline
 
 on: [push]
 
