@@ -48,6 +48,7 @@ jobs:
           dvc metrics diff main --targets app/test_score.json --show-md >> report.md
           
           # Send it!
-          cml-send-comment report.md
+          cml comment create report.md
+          #cml-send-comment report.md
 
           
