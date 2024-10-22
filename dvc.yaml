@@ -18,7 +18,7 @@ stages:
     #     - data/processed/test_winequality.csv
         
     train_and_evaluate:
-        # cmd: python train.py
+        cmd: python train.py
         cmd: python app/git_test.py
         # deps:
         # - data/processed/train_winequality.csv
