@@ -20,6 +20,10 @@ on: [push]
 jobs:
   run:
     runs-on: [ubuntu-latest]
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     #container: docker://mtdd1/tyminterview:latest
     steps:
       - name: Checkout Repo
