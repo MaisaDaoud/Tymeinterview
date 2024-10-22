@@ -5,8 +5,8 @@ from test import get_predictions
 from sklearn.metrics import mean_squared_error
 import json 
 
-data = pd.read_csv('x_test.csv')
-y = pd.read_csv('y_test.csv')
+data = pd.read_csv('../x_test.csv')
+y = pd.read_csv('../y_test.csv')
 
 y_hat = get_predictions(data)
 
