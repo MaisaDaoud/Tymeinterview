@@ -31,3 +31,8 @@ kubectl get pods
 kubectl get svc
 minikube service myapp
 ```
+
+
+## challenges I faced
+it took me some time to figure out how to solve `dvc command not found bug`, not many available onine solutions. 
+Turns out the I should include the version as per the documentation suggests
