@@ -15,8 +15,8 @@ import pickle
 from sklearn.metrics import mean_squared_error
 
 parser = argparse.ArgumentParser()
-# parser.add_argument('--model-dir', dest='model_dir',
-#                     default=os.getenv('AIP_MODEL_DIR'), type=str, help='defaults is the staging bucket location')
+parser.add_argument('--model-dir', dest='model_dir',
+                    default=os.getenv('AIP_MODEL_DIR'), type=str, help='defaults is the staging bucket location')
 parser.add_argument("--learning_rate", dest="learning_rate",
                     default=0.1, type=float, help="learning rate for training")
 
@@ -63,7 +63,7 @@ def train_model(X_train,y_train):
                           alpha=10,
                           random_state=42)
     xgb_reg.fit(X_train, y_train)
-    with open('model.pkl','wb') as f:
+    with open(os.path.join(args.model_dir,'model.pkl'),'wb') as f:
         pickle.dump(xgb_reg,f)
     logging.info("Training completed")
     

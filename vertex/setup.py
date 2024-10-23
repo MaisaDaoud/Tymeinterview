@@ -1,13 +1,11 @@
-from setuptools import find_packages
-from setuptools import setup
+import setuptools
 
-REQUIRED_PACKAGES = ['cloudml-hypertune']
+setuptools.setup(
 
-setup(
-    name='trainer',
-    version='0.1',
-    install_requires=REQUIRED_PACKAGES,
-    packages=find_packages(),
-    include_package_data=True,
-    description='boston training application.'
-)
+    install_requires=[
+
+        'cloudml-hypertune',
+
+    ],
+
+    packages=setuptools.find_packages())

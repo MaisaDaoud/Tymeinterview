@@ -76,16 +76,16 @@ hpt_job = aiplatform.HyperparameterTuningJob(
     display_name="boston",
     custom_job=job,
     metric_spec={
-        "mse": "minimize",
+       "mse": "minimize",
     },
     parameter_spec={
-            'learning_rate': hpt.DoubleParameterSpec(min=0.001, max=0.1, scale='log'),
-            'max_depth': hpt.IntegerParameterSpec(min=4, max=8, scale='linear'),
-            'n_estimators': hpt.DiscreteParameterSpec(values=[10,20, 30], scale='linear'),
+            'learning_rate': hpt.DoubleParameterSpec(min=0.09, max=0.2, scale='liear'),
+            'max_depth': hpt.IntegerParameterSpec(min=4, max=6, scale='linear'),
+            'n_estimators': hpt.DiscreteParameterSpec(values=[10,15,20,25,30], scale='linear'),
            
     },
     search_algorithm=None,
-    max_trial_count=4,
+    max_trial_count=6,
     parallel_trial_count=2,
 )
    
@@ -121,7 +121,8 @@ print('best ',best)
 
 
 # Fetch the best model
-#BEST_MODEL_DIR = MODEL_DIR + "/" + best[0] + "/model"
+BEST_MODEL_DIR = MODEL_DIR + "/" + best[0] + "/model"
+print('BEST_MODEL_DIR ', BEST_MODEL_DIR)
 
 #gsutil ls {BEST_MODEL_DIR}
      
@@ -151,13 +152,14 @@ echo "$pkg_info" > vertex/PKG-INFO
 # Make the training subfolder
 mkdir vertex/trainer
 touch vertex/trainer/__init__.py
+# add trainer code to task.py
 
 ''' 
 
 '''
 # zip package after local testing to copy it to the bucket
-rm -f vertex.tar vertex.tar.gz
-tar cvf trainer_boston.tar vertex
+rm -f trainer_boston.tar trainer_boston.tar.gz
+tar cvf trainer_boston.tar -C vertex .
 gzip trainer_boston.tar
 gsutil cp trainer_boston.tar.gz gs://tym-maisa-doaud/trainer_boston.tar.gz
      
