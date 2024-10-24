@@ -94,25 +94,6 @@ X_train,y_train,X_test,y_test  = get_data()
 model = train_model(X_train,y_train)
 mse = evaluate_model(model, X_test, y_test)
 
-
-# GCSFuse conversion
-# gs_prefix = 'gs://'
-# gcsfuse_prefix = '/gcs/'
-# if args.model_dir.startswith(gs_prefix):
-#     args.model_dir = args.model_dir.replace(gs_prefix, gcsfuse_prefix)
-#     dirpath = os.path.split(args.model_dir)[0]
-#     if not os.path.isdir(dirpath):
-#         os.makedirs(dirpath)
-
-# # Export the classifier to a file
-# gcs_model_path = os.path.join(args.model_dir, 'model.pkl')
-# logging.info("Saving model artifacts to {}". format(gcs_model_path))
-# model.save_model(gcs_model_path)
-
-# logging.info("Saving metrics to {}/mse.json". format(args.model_dir))
-# gcs_metrics_path = os.path.join(args.model_dir, 'metrics.json')
-# with open(gcs_metrics_path, "w") as f:
-#     f.write(f"{'mse: {mse}'}")
 artifact_filename = 'model.pkl'
 
 # Save model artifact to local filesystem (doesn't persist)
