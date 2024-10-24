@@ -101,7 +101,7 @@ local_path = artifact_filename
 with open(local_path, 'wb') as model_file:
   pickle.dump(model, model_file)
 
-# Upload model artifact to Cloud Storage
+
 storage_path = os.path.join(args.model_dir, artifact_filename)
 blob = storage.blob.Blob.from_string(storage_path, client=storage.Client())
 blob.upload_from_filename(local_path)
