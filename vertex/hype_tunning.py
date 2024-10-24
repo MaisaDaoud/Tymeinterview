@@ -4,6 +4,9 @@ from google.cloud import aiplatform
 from google.cloud.aiplatform import hyperparameter_tuning as hpt
 
 import os
+import json
+import subprocess
+from google.cloud import storage
 
 PROJECT_ID = "maisa-daoud"  # @param {type:"string"}
 LOCATION = "us-west1"  # @param {type:"string"}
@@ -30,7 +33,8 @@ DEPLOY_IMAGE = "{}-docker.pkg.dev/vertex-ai/prediction/{}:latest".format(
 TRAIN_COMPUTE = "n1-standard-4"
 
 # Set path to save model
-MODEL_DIR = "{}/aiplatform-custom-job".format(BUCKET_URI)
+#MODEL_DIR = "{}/{}".format(BUCKET_URI, "model")
+MODEL_DIR = "{}/aiplatform-custom-job/{}".format(BUCKET_URI, "model")
 
 DISK_TYPE = "pd-ssd"  # [ pd-ssd, pd-standard]
 DISK_SIZE = 100  # GB
@@ -41,8 +45,7 @@ def hyperune():
     disk_spec = {"boot_disk_type": DISK_TYPE, "boot_disk_size_gb": DISK_SIZE}
     # # Set the command-line arguments
     # CMDARGS = [
-    #     "--dataset-data-url=" + DATASET_DIR + "/iris_data.csv",
-    #     "--dataset-labels-url=" + DATASET_DIR + "/iris_target.csv",
+    #      "--model-dir=" + MODEL_DIR,
     # ]
 
     # Set the worker pool specs
@@ -64,6 +67,7 @@ def hyperune():
         display_name="boston",
         worker_pool_specs=worker_pool_spec,
         base_output_dir=MODEL_DIR,
+        staging_bucket=MODEL_DIR,
     )
 
 
@@ -80,7 +84,7 @@ def hyperune():
             
         },
         search_algorithm=None,
-        max_trial_count=6,
+        max_trial_count=2,
         parallel_trial_count=2,
     )
     
@@ -101,8 +105,8 @@ def hyperune():
                     trial.id,
                     float(trial.parameters[0].value),
                     float(trial.parameters[1].value),
+                    float(trial.parameters[2].value),
                     float(trial.final_measurement.metrics[0].value),
-                    trial.final_measurement.metrics[0].value,
                 )
             except:
                 best = (
@@ -119,6 +123,14 @@ def hyperune():
     BEST_MODEL_DIR = MODEL_DIR + "/" + best[0] + "/model"
     print('BEST_MODEL_DIR ', BEST_MODEL_DIR)
 
+
+    
+    #write best results to file
+    with open("best_parameters.json", 'w') as outfile:
+        json.dump({ "model_id":best[0],"learning_rate":best[1],"max_depth":best[2],"n_estimators":best[3],"model_dir":BEST_MODEL_DIR}, outfile)
+    
+    #copy best model to app/model/model.pkl
+    subprocess.run(["gsutil","-m","cp","-r",BEST_MODEL_DIR , "../app/model/."])
     # #gsutil ls {BEST_MODEL_DIR}
 
 if __name__=='__main__':
