@@ -96,7 +96,7 @@ mse = evaluate_model(model, X_test, y_test)
 
 artifact_filename = 'model.pkl'
 
-# Save model artifact to local filesystem (doesn't persist)
+# Save model artifact to local filesystem 
 local_path = artifact_filename
 with open(local_path, 'wb') as model_file:
   pickle.dump(model, model_file)
