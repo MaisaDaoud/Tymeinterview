@@ -125,37 +125,3 @@ if __name__=='__main__':
     hyperune() 
 
 
-''' 
-# Make folder for Python training script
-#rm -rf vertex
-mkdir vertex
-
-# Add package information
-touch vertex/README.md
-
-setup_cfg="[egg_info]\n\ntag_build =\n\ntag_date = 0"
-echo "$setup_cfg" > vertex/setup.cfg
-
-setup_py="import setuptools\n\nsetuptools.setup(\n\n    install_requires=[\n\n        'cloudml-hypertune',\n\n    ],\n\n    packages=setuptools.find_packages())"
-echo "$setup_py" > vertex/setup.py
-
-pkg_info="Metadata-Version: 1.0\n\nName: Boston regression\n\nVersion: 0.0.0\n\nSummary: Demostration training script\n\nHome-page: www.maisa.com\n\nAuthor: Maisa\n\nAuthor-email: maysa_taheir@yahoo.com\n\nLicense: Public\n\nDescription: Demo\n\nPlatform: Vertex"
-echo "$pkg_info" > vertex/PKG-INFO
-
-# Make the training subfolder
-mkdir vertex/trainer
-touch vertex/trainer/__init__.py
-# add trainer code to task.py
-
-''' 
-
-'''
-# zip package after local testing to copy it to the bucket
-rm -f trainer_boston.tar trainer_boston.tar.gz
-tar cvf trainer_boston.tar -C vertex .
-gzip trainer_boston.tar
-gsutil cp trainer_boston.tar.gz gs://tym-maisa-doaud/trainer_boston.tar.gz
-     
-
-'''
-
