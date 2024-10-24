@@ -23,3 +23,4 @@ TestResults.xml
 
 creds.json
 .DS_Store
+.pyc
