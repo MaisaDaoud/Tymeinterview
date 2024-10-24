@@ -1,9 +1,8 @@
 
 name: auto-testing
-on: 
-  push:
-    paths:
-          - vertex/trainer/task.py
+on: push
+    # paths:
+    #       - vertex/trainer/task.py
 jobs:
   run:
     runs-on: [ubuntu-latest]
