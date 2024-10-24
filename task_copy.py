@@ -1,7 +1,5 @@
-import datetime
+
 import os
-import subprocess
-import sys
 import pandas as pd
 import xgboost as xgb
 import hypertune
@@ -11,12 +9,12 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import pickle
-
+from google.cloud import storage
 from sklearn.metrics import mean_squared_error
 
 parser = argparse.ArgumentParser()
-# parser.add_argument('--model-dir', dest='model_dir',
-#                     default=os.getenv('AIP_MODEL_DIR'), type=str, help='defaults is the staging bucket location')
+parser.add_argument('--model-dir', dest='model_dir',
+                    default=os.getenv('AIP_MODEL_DIR'), type=str, help='defaults is the staging bucket location')
 parser.add_argument("--learning_rate", dest="learning_rate",
                     default=0.1, type=float, help="learning rate for training")
 
@@ -74,7 +72,7 @@ def evaluate_model(model, test_data, test_labels):
     y_hat = model.predict(test_data)
 
     # evaluate predictions
-    mse = mean_squared_error(test_labels, y_hat)
+    mse = - mean_squared_error(test_labels, y_hat)
     logging.info(f"Evaluation completed with model mse: {mse}")
 
     # report metric for hyperparameter tuning
@@ -87,10 +85,13 @@ def evaluate_model(model, test_data, test_labels):
 
 
 X_train,y_train,X_test,y_test  = get_data()
+pd.DataFrame(X_test) .to_csv("x_test.csv",index=False)
+pd.DataFrame(y_test) .to_csv("y_test.csv", index=False)
 model = train_model(X_train,y_train)
 mse = evaluate_model(model, X_test, y_test)
 
-# # GCSFuse conversion
+
+# GCSFuse conversion
 # gs_prefix = 'gs://'
 # gcsfuse_prefix = '/gcs/'
 # if args.model_dir.startswith(gs_prefix):
@@ -104,7 +105,21 @@ mse = evaluate_model(model, X_test, y_test)
 # logging.info("Saving model artifacts to {}". format(gcs_model_path))
 # model.save_model(gcs_model_path)
 
-# logging.info("Saving metrics to {}/metrics.json". format(args.model_dir))
+# logging.info("Saving metrics to {}/mse.json". format(args.model_dir))
 # gcs_metrics_path = os.path.join(args.model_dir, 'metrics.json')
 # with open(gcs_metrics_path, "w") as f:
-#     f.write(f"{'accuracy: {accuracy}'}")
+#     f.write(f"{'mse: {mse}'}")
+artifact_filename = 'model.pkl'
+
+# Save model artifact to local filesystem (doesn't persist)
+local_path = artifact_filename
+with open(local_path, 'wb') as model_file:
+  pickle.dump(model, model_file)
+
+# Upload model artifact to Cloud Storage
+
+storage_path = os.path.join(args.model_dir, artifact_filename)
+blob = storage.blob.Blob.from_string(storage_path, client=storage.Client())
+blob.upload_from_filename(local_path)
+blob.upload_from_filename("x_test.csv")
+blob.upload_from_filename("y_test.csv")

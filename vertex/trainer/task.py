@@ -6,15 +6,23 @@ import hypertune
 import argparse
 import logging
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 import pickle
 from google.cloud import storage
 from sklearn.metrics import mean_squared_error
+import subprocess
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model-dir', dest='model_dir',
                     default=os.getenv('AIP_MODEL_DIR'), type=str, help='defaults is the staging bucket location')
+parser.add_argument("--training-url", dest="training_url",
+                    type=str, help="Download url for the training data.")
+parser.add_argument("--labels-url", dest="labels_url",
+                    type=str, help="Download url for the training data labels.")
+parser.add_argument("--testing-url", dest="testing_url",
+                    type=str, help="Download url for the testing data.")
+parser.add_argument("--testing-labels-url", dest="testing_labels_url", 
+                    type=str, help="Download url for the testing data labels.")
 parser.add_argument("--learning_rate", dest="learning_rate",
                     default=0.1, type=float, help="learning rate for training")
 
@@ -31,22 +39,20 @@ logging.getLogger().setLevel(logging.INFO)
 def get_data():
     logging.info("Downloading training data and labels")
     # gsutil outputs everything to stderr. Hence, the need to divert it to stdout.
-    data_url = "http://lib.stat.cmu.edu/datasets/boston"
-    raw_df = pd.read_csv(data_url, sep="\s+", skiprows=22, header=None)
+    
+    subprocess.check_call(['gsutil', 'cp', args.training_url, 'x_train.csv'], stderr=sys.stdout)
+    subprocess.check_call(['gsutil', 'cp', args.labels_url, 'y_train.csv'], stderr=sys.stdout)
+    subprocess.check_call(['gsutil', 'cp', args.testing_url, 'x_test.csv'], stderr=sys.stdout)
+    subprocess.check_call(['gsutil', 'cp', args.testing_labels_url, 'y_test.csv'], stderr=sys.stdout)
 
-    #TODO propper datapreprocessing
+    subprocess.run(["cp","x_test.csv", "../."])
+    subprocess.run(["cp","y_test.csv", "../."])
+    # Load data into pandas, then use `.values` to get NumPy arrays
+    X_train = pd.read_csv('x_train.csv').values
+    y_train = pd.read_csv('y_train.csv').values
+    X_test = pd.read_csv('x_test.csv').values
+    y_test = pd.read_csv('y_test.csv').values
 
-    raw_df[0].fillna(raw_df[0].mean(),inplace=True)
-    raw_df[1].fillna(raw_df[1].mean(),inplace=True)
-    raw_df[10].fillna(raw_df[10].mean(),inplace=True)
-
-
-    X, y = raw_df.iloc[:,0:10],  raw_df.iloc[:,10] #load_breast_cancer(return_X_y=True)
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y,  random_state=35) #,stratify=y)
-
-    # Load data into DMatrix object
-    #dtrain = xgb.DMatrix(X_train, label=y_train)
     return X_train,y_train, X_test, y_test
 
 def train_model(X_train,y_train):
@@ -85,8 +91,10 @@ def evaluate_model(model, test_data, test_labels):
 
 
 X_train,y_train,X_test,y_test  = get_data()
+
 model = train_model(X_train,y_train)
 mse = evaluate_model(model, X_test, y_test)
+
 
 # GCSFuse conversion
 # gs_prefix = 'gs://'

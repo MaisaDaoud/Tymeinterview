@@ -7,6 +7,8 @@ import os
 import json
 import subprocess
 from google.cloud import storage
+from sklearn.model_selection import train_test_split
+import pandas as pd
 
 PROJECT_ID = "maisa-daoud"  # @param {type:"string"}
 LOCATION = "us-west1"  # @param {type:"string"}
@@ -33,20 +35,59 @@ DEPLOY_IMAGE = "{}-docker.pkg.dev/vertex-ai/prediction/{}:latest".format(
 TRAIN_COMPUTE = "n1-standard-4"
 
 # Set path to save model
-#MODEL_DIR = "{}/{}".format(BUCKET_URI, "model")
 MODEL_DIR = "{}/aiplatform-custom-job/{}".format(BUCKET_URI, "model")
 
 DISK_TYPE = "pd-ssd"  # [ pd-ssd, pd-standard]
 DISK_SIZE = 100  # GB
 
+def save_to_storage(file_name:str):
+    storage_path = os.path.join(MODEL_DIR, file_name)
+    blob = storage.blob.Blob.from_string(storage_path, client=storage.Client())
+    blob.upload_from_filename(file_name)
+
+
+
+def split_save_data():
+    data_url = "http://lib.stat.cmu.edu/datasets/boston"
+    raw_df = pd.read_csv(data_url, sep="\s+", skiprows=22, header=None)
+
+    #TODO propper datapreprocessing
+
+    # raw_df[0].fillna(raw_df[0].mean(),inplace=True)
+    # raw_df[1].fillna(raw_df[1].mean(),inplace=True)
+    raw_df[10].fillna(raw_df[10].mean(),inplace=True)
+
+
+    X, y = raw_df.iloc[:,0:10],  raw_df.iloc[:,10] #load_breast_cancer(return_X_y=True)
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y,  random_state=35) #,stratify=y)
+
+    pd.DataFrame(X_train).to_csv("x_train.csv",index=False)
+    pd.DataFrame(y_train).to_csv("y_train.csv", index=False)
+
+    pd.DataFrame(X_test).to_csv("x_test.csv",index=False)
+    pd.DataFrame(y_test).to_csv("y_test.csv", index=False)
+
+    save_to_storage("x_train.csv")
+    save_to_storage("y_train.csv")
+    save_to_storage("x_test.csv")
+    save_to_storage("y_test.csv")
+
+  
 def hyperune():
+    split_save_data()
+
     aiplatform.init(project=PROJECT_ID, location=LOCATION, staging_bucket=BUCKET_URI)
     machine_spec = {"machine_type": TRAIN_COMPUTE, "accelerator_count": 0}
     disk_spec = {"boot_disk_type": DISK_TYPE, "boot_disk_size_gb": DISK_SIZE}
     # # Set the command-line arguments
-    # CMDARGS = [
-    #      "--model-dir=" + MODEL_DIR,
-    # ]
+    CMDARGS = [
+         #"--model-dir=" + MODEL_DIR,
+         "--training-url="+os.path.join(MODEL_DIR, "x_train.csv"),
+         "--labels-url="+os.path.join(MODEL_DIR, "y_train.csv"),
+         "--testing-url="+os.path.join(MODEL_DIR, "x_test.csv"),
+         "--testing-labels-url="+os.path.join(MODEL_DIR, "y_test.csv")
+    ]
 
     # Set the worker pool specs
     worker_pool_spec = [
@@ -58,7 +99,7 @@ def hyperune():
                 "executor_image_uri": TRAIN_IMAGE,
                 "package_uris": [BUCKET_URI + "/trainer_boston.tar.gz"],
                 "python_module": "trainer.task",
-                # "args": CMDARGS,
+                 "args": CMDARGS,
             },
         }
     ]
@@ -130,7 +171,7 @@ def hyperune():
         json.dump({ "model_id":best[0],"learning_rate":best[1],"max_depth":best[2],"n_estimators":best[3],"model_dir":BEST_MODEL_DIR}, outfile)
     
     #copy best model to app/model/model.pkl
-    subprocess.run(["gsutil","-m","cp","-r",BEST_MODEL_DIR , "../app/model/."])
+    subprocess.run(["gsutil","-m","cp","-r",BEST_MODEL_DIR , "../app/."])
     # #gsutil ls {BEST_MODEL_DIR}
 
 if __name__=='__main__':
