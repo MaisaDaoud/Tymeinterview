@@ -1,1 +1,1 @@
-{"model_id": "1", "learning_rate": 0.14500000000000002, "max_depth": 5.0, "n_estimators": 20.0, "model_dir": "gs://tym-maisa-doaud/aiplatform-custom-job/model/1/model"}
+{"model_id": "6", "learning_rate": 0.1600380948728951, "max_depth": 4.0, "n_estimators": 30.0, "model_dir": "gs://tym-maisa-doaud/aiplatform-custom-job/model/6/model"}

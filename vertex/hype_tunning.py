@@ -125,8 +125,8 @@ def hyperune():
             
         },
         search_algorithm=None,
-        max_trial_count=2,
-        parallel_trial_count=2,
+        max_trial_count=6,
+        parallel_trial_count=3,
     )
     
 
@@ -136,23 +136,23 @@ def hyperune():
 
     #best trail
     # Initialize a tuple to identify the best configuration
-    best = (None, None, None, -100.0)
+    best = (None, None, None, 100)
     # Iterate through the trails and update the best configuration
     for trial in hpt_job.trials:
         # Keep track of the best outcome
-        if float(trial.final_measurement.metrics[0].value) > best[3]: #>
+        if float(-1*trial.final_measurement.metrics[0].value) < best[3]: #>
             try:
                 best = (
                     trial.id,
                     float(trial.parameters[0].value),
                     float(trial.parameters[1].value),
                     float(trial.parameters[2].value),
-                    float(trial.final_measurement.metrics[0].value),
+                   -1* float(trial.final_measurement.metrics[0].value),
                 )
             except:
                 best = (
                     trial.id,
-                    float(trial.parameters[0].value),
+                   -1* float(trial.parameters[0].value),
                     None,
                    
                 )
