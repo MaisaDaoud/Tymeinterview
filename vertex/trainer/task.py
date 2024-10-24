@@ -85,8 +85,11 @@ def evaluate_model(model, test_data, test_labels):
 
 
 X_train,y_train,X_test,y_test  = get_data()
+pd.DataFrame(X_test) .to_csv("x_test.csv",index=False)
+pd.DataFrame(y_test) .to_csv("y_test.csv", index=False)
 model = train_model(X_train,y_train)
 mse = evaluate_model(model, X_test, y_test)
+
 
 # GCSFuse conversion
 # gs_prefix = 'gs://'

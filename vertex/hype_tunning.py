@@ -130,7 +130,7 @@ def hyperune():
         json.dump({ "model_id":best[0],"learning_rate":best[1],"max_depth":best[2],"n_estimators":best[3],"model_dir":BEST_MODEL_DIR}, outfile)
     
     #copy best model to app/model/model.pkl
-    subprocess.run(["gsutil","-m","cp","-r",BEST_MODEL_DIR , "../app/model/."])
+    subprocess.run(["gsutil","-m","cp","-r",BEST_MODEL_DIR , "../app/."])
     # #gsutil ls {BEST_MODEL_DIR}
 
 if __name__=='__main__':
