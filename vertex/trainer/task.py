@@ -45,6 +45,8 @@ def get_data():
     subprocess.check_call(['gsutil', 'cp', args.testing_url, 'x_test.csv'], stderr=sys.stdout)
     subprocess.check_call(['gsutil', 'cp', args.testing_labels_url, 'y_test.csv'], stderr=sys.stdout)
 
+    subprocess.run(["cp","x_test.csv", "../."])
+    subprocess.run(["cp","y_test.csv", "../."])
     # Load data into pandas, then use `.values` to get NumPy arrays
     X_train = pd.read_csv('x_train.csv').values
     y_train = pd.read_csv('y_train.csv').values
