@@ -42,16 +42,12 @@ jobs:
           # Send it!
           cml comment create report.md
 
-      - name: 'commit  artifact'
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Changed files
-
-      # - name: 'Upload Artifact'
-      #   uses: actions/upload-artifact@v4
+      # - name: 'commit  artifact'
+      #   uses: stefanzweifel/git-auto-commit-action@v4
       #   with:
-      #     name: test_score
-      #     path: test_score.json
+      #     commit_message: Changed files
+
+
    
         
 
