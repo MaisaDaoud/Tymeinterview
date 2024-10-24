@@ -74,7 +74,7 @@ def evaluate_model(model, test_data, test_labels):
     y_hat = model.predict(test_data)
 
     # evaluate predictions
-    mse = mean_squared_error(test_labels, y_hat)
+    mse = - mean_squared_error(test_labels, y_hat)
     logging.info(f"Evaluation completed with model mse: {mse}")
 
     # report metric for hyperparameter tuning

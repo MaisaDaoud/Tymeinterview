@@ -45,6 +45,7 @@ rm -f trainer_boston.tar trainer_boston.tar.gz
 tar cvf trainer_boston.tar -C vertex .
 gzip trainer_boston.tar
 gsutil cp trainer_boston.tar.gz gs://tym-maisa-doaud/trainer_boston.tar.gz
+cd vertex &&  python hype_tunning.py
 ```
 
 
@@ -76,5 +77,8 @@ minikube service myapp
 
 
 ## challenges I faced
-it took me some time to figure out how to solve `dvc command not found bug`, not many available onine solutions. 
+1. it took me some time to figure out how to solve `dvc command not found bug`, not many available onine solutions. 
 Turns out the I should include the version as per the documentation suggests
+2. Hypreparameter tunning job returns state:infeasible with no infeasible reason msg only  when goal:minimize. Solved it by taking -mse and 
+goal:maximise after a few attempts to fix it differently
+
