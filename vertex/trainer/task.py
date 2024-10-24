@@ -38,7 +38,6 @@ logging.getLogger().setLevel(logging.INFO)
 
 def get_data():
     logging.info("Downloading training data and labels")
-    # gsutil outputs everything to stderr. Hence, the need to divert it to stdout.
     
     subprocess.check_call(['gsutil', 'cp', args.training_url, 'x_train.csv'], stderr=sys.stdout)
     subprocess.check_call(['gsutil', 'cp', args.labels_url, 'y_train.csv'], stderr=sys.stdout)
