@@ -1,9 +1,8 @@
 
 name: auto-testing
-on: 
-  push:
-    paths:
-          - vertex/trainer/task.py
+on: push
+    # paths:
+    #       - vertex/trainer/task.py
 jobs:
   run:
     runs-on: [ubuntu-latest]
@@ -30,8 +29,8 @@ jobs:
         run: |
 
           # Run the test
-          sudo pip3 install -r app/requirements.txt
-          sudo python git_test.py
+          pip install -r app/requirements.txt
+          python git_test.py
           
          
           echo "## Workspace vs. Main" > report.md

@@ -22,4 +22,5 @@ mse = mean_squared_error(y, y_hat)
     
 # Write results to file
 with open("test_score.json", 'w') as outfile:
+        print('IM HERE ********')
         json.dump({ "mse":mse}, outfile)
