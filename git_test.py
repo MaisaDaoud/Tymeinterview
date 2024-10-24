@@ -19,7 +19,15 @@ y = pd.read_csv('y_test.csv')
 y_hat = get_predictions(data)
 
 mse = mean_squared_error(y, y_hat)
-    
+
+# get file
+try:
+    test_score = json.load(open('test_score.json'))
+except FileNotFoundError:
+    test_score = {} 
+
+test_score["mse"] = "mse"  
+
 # Write results to file
 with open("test_score.json", 'w') as outfile:
         print('IM HERE ********')
