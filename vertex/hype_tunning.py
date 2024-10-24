@@ -125,8 +125,8 @@ def hyperune():
             
         },
         search_algorithm=None,
-        max_trial_count=2,
-        parallel_trial_count=2,
+        max_trial_count=6,
+        parallel_trial_count=3,
     )
     
 
