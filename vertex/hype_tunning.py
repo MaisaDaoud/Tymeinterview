@@ -131,23 +131,24 @@ def hyperune():
     
 
     hpt_job.run()
+    # hpt_job = aiplatform.HyperparameterTuningJob.get('projects/521705992103/locations/us-west1/hyperparameterTuningJobs/7223297164011634688')
 
-    print('HT trails ', hpt_job.trials)
+    # print('HT trails ', hpt_job.trials)
 
     #best trail
     # Initialize a tuple to identify the best configuration
-    best = (None, None, None, 0)
+    best = (None, None, None, None,100)
     # Iterate through the trails and update the best configuration
     for trial in hpt_job.trials:
         # Keep track of the best outcome
-        if float(-1*trial.final_measurement.metrics[0].value) > best[3]: #>
+        if float(-1*trial.final_measurement.metrics[0].value) < best[4]: #>
             try:
                 best = (
                     trial.id,
                     float(trial.parameters[0].value),
                     float(trial.parameters[1].value),
                     float(trial.parameters[2].value),
-                   -1* float(trial.final_measurement.metrics[0].value),
+                    float(-1* trial.final_measurement.metrics[0].value),
                 )
             except:
                 best = (
@@ -156,6 +157,7 @@ def hyperune():
                     None,
                    
                 )
+        print('best', best)
 
     # print details of the best configuration
     print('best ',best)
