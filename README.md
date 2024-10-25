@@ -50,11 +50,11 @@ cd vertex &&  python hype_tunning.py
 
 # Test check
 # Git test
-<img src="Screenshot.png" width="128"/>
+<img src="Screenshot.png" width="256"/>
 # GC Bucket
-<img src="Buckets.png" width="128"/>
+<img src="Buckets.png" width="256"/>
 # Pipeline
-<img src="Pipeline.png" width="128"/>
+<img src="Pipeline.png" width="256"/>
 
 ## Test the test server locally 
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
