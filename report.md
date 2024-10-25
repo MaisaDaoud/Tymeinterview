@@ -1,4 +1,4 @@
 ## Workspace vs. Main
 | Path            | Metric   | Value   | Change   |
 |-----------------|----------|---------|----------|
-| test_score.json | mse      | 0.55381 | -0.21583 |
+| test_score.json | mse      | 9.15288 | 8.38325  |
