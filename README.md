@@ -48,8 +48,15 @@ gsutil cp trainer_boston.tar.gz gs://tym-maisa-doaud/trainer_boston.tar.gz
 cd vertex &&  python hype_tunning.py
 ```
 
+# Test check
+# Git test
+<img src="Screenshot.png" width="128"/>
+# GC Bucket
+<img src="Buckets.png" width="128"/>
+# Pipeline
+<img src="Pipeline.png" width="128"/>
 
-## test the server locally 
+## Test the test server locally 
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 

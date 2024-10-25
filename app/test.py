@@ -1,13 +1,13 @@
 import pickle
 import numpy as np
 import os
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'model/model.pkl')
 
 
 def get_predictions(data):
     # try:
-    print('********** ', os.getcwd() )
-    
-    with open('app/model/model.pkl', 'rb') as f: 
+    with open(filename, 'rb') as f:  #'app/model/model.pkl'
         model = pickle.load(f)
         data = np.array(data)
     # except FileNotFoundError:

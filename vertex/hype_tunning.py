@@ -125,50 +125,50 @@ def hyperune():
             
         },
         search_algorithm=None,
-        max_trial_count=6,
-        parallel_trial_count=3,
+        max_trial_count=4,
+        parallel_trial_count=2,
     )
     
 
-    # hpt_job.run()
+    hpt_job.run()
 
-    # print('HT trails ', hpt_job.trials)
+    print('HT trails ', hpt_job.trials)
 
-    # #best trail
-    # # Initialize a tuple to identify the best configuration
-    # best = (None, None, None, 100)
-    # # Iterate through the trails and update the best configuration
-    # for trial in hpt_job.trials:
-    #     # Keep track of the best outcome
-    #     if float(-1*trial.final_measurement.metrics[0].value) < best[3]: #>
-    #         try:
-    #             best = (
-    #                 trial.id,
-    #                 float(trial.parameters[0].value),
-    #                 float(trial.parameters[1].value),
-    #                 float(trial.parameters[2].value),
-    #                -1* float(trial.final_measurement.metrics[0].value),
-    #             )
-    #         except:
-    #             best = (
-    #                 trial.id,
-    #                -1* float(trial.parameters[0].value),
-    #                 None,
+    #best trail
+    # Initialize a tuple to identify the best configuration
+    best = (None, None, None, 100)
+    # Iterate through the trails and update the best configuration
+    for trial in hpt_job.trials:
+        # Keep track of the best outcome
+        if float(-1*trial.final_measurement.metrics[0].value) < best[3]: #>
+            try:
+                best = (
+                    trial.id,
+                    float(trial.parameters[0].value),
+                    float(trial.parameters[1].value),
+                    float(trial.parameters[2].value),
+                   -1* float(trial.final_measurement.metrics[0].value),
+                )
+            except:
+                best = (
+                    trial.id,
+                   -1* float(trial.parameters[0].value),
+                    None,
                    
-    #             )
+                )
 
-    # # print details of the best configuration
-    # print('best ',best)
+    # print details of the best configuration
+    print('best ',best)
 
     # Fetch the best model
-    BEST_MODEL_DIR = MODEL_DIR + "/" + "6" + "/model"
+    BEST_MODEL_DIR = MODEL_DIR + "/" + best[0] + "/model"
     print('BEST_MODEL_DIR ', BEST_MODEL_DIR)
 
 
     
     #write best results to file
-    # with open("best_parameters.json", 'w') as outfile:
-    #     json.dump({ "model_id":best[0],"learning_rate":best[1],"max_depth":best[2],"n_estimators":best[3],"model_dir":BEST_MODEL_DIR}, outfile)
+    with open("best_parameters.json", 'w') as outfile:
+        json.dump({ "model_id":best[0],"learning_rate":best[1],"max_depth":best[2],"n_estimators":best[3],"model_dir":BEST_MODEL_DIR}, outfile)
     
     #copy best model to app/model/model.pkl
     subprocess.run(["gsutil","-m","cp","-r",BEST_MODEL_DIR , "../app/."])
